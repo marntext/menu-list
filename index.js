@@ -82,22 +82,17 @@ const menu = [
   ];
 
   window.addEventListener("DOMContentLoaded", function() {
-    displayMenuItems()
+    displayMenuItems(menu);
+    displayCategoryItems();
   })
 
-  // id: 1,
-  // title: "buttermilk pancakes",
-  // category: "breakfast",
-  // price: 15.99,
-  // img: "./images/item-1.jpeg",
-  // desc: `I'm baby woke mlkshk wolf bitters live-edge blue bottle, hammock freegan copper mug whatever cold-pressed `,
+  const sectionElement = document.querySelector(".section-center");
+  const categoryElement = document.querySelector(".btn-container");
 
-  const sectionElement = document.querySelector(".section-center")
-
-  function displayMenuItems() {
+  function displayMenuItems(menuList) {
     let sectionContent = "";
 
-    menu.forEach(item => {
+    menuList.forEach((item) => {
       sectionContent +=
         `<article class="menu-item">
         <img src=${item.img} alt="menu item" class="photo" />
@@ -114,3 +109,37 @@ const menu = [
     })
     sectionElement.innerHTML = sectionContent;
   }
+
+  function displayCategoryItems() {
+    let categories = [];
+    let categoryContent = `<button type="button" class="filter-btn" data-id="all">all</button>`;
+
+    menu.forEach((item) => {
+      if(categories.indexOf(item.category) === -1) {
+        categories.push(item.category);
+      }
+    });
+    categories.forEach((category) => {
+      categoryContent += `<button type="button" class="filter-btn" data-id="${category}">${category}</button>`
+      });
+      categoryElement.innerHTML = categoryContent;
+
+      const filterButtons = document.querySelectorAll(".filter-btn");
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", function (e) {
+          const selectedCategoryName = e.target.getAttribute("data-id");
+          const filteredMenu = menu.filter(
+            (item) => item.category === e.target.getAttribute("data-id")
+          );
+          console.log("selectedCategoryName :" + selectedCategoryName);
+
+          if (selectedCategoryName === "all") {
+            displayMenuItems(menu);
+          } else {
+            displayMenuItems(filteredMenu);
+          }
+        });
+      });
+  }
+
+  //2.47
